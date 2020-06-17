@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Spindle</title>
+    <meta ncharset='utf-8'>
+    <meta name="viewport" content="width=device-width">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <!--Use external stylesheet please. I used the style tag just for testing purposes.-->
+
+
+    <style>
+        body {
+            font-family: 'Montserrat';
+            margin: 2%;
+        }
+
+        .whole {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .left,
+        .right {
+            width: 50%;
+        }
+
+        .left {
+            background-color: black;
+            color: white;
+            font-size: 15px;
+        }
+
+        .left #input {
+            background-color: whitesmoke;
+            padding-top: 2%;
+            border: 0;
+            margin: -2% 1%;
+        }
+
+        .right {
+            border: 1px solid black;
+            padding: 1%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='whole'>
+        <div class='left' id='left'>
+            <div class='code' id='code'>
+                <p style='margin: 2% 1%'>Spin your website here like so:<br>
+                    <code> &ltp> style="background-color: rgb(171, 171, 243)"> Welcome to Spun &lt/p> </code>
+                    Press Shift+Enter to see results:
+                </p>
+                <br>
+                <textarea type='text' style="width: 97.7%;" rows="30" id='input' spellcheck="false"> </textarea>
+            </div>
+        </div>
+
+        <div class='right' id='right'>
+            <!--User written code goes here-->
+        </div>
+    </div>
+
+    <script>
+        var textarea = document.getElementById('input');
+
+        textarea.addEventListener("keypress", (event) => {
+            var shift = event.shiftKey ? true : false;
+            //indentation --> Everytime Tab in pressed, give a padding-left of 4px in 
+            //the textarea instead of moving to another element in the webpage. 
+            if (event.keyCode === 9) {
+                event.preventDefault();
+                textarea.style.paddingLeft = 4+'px';
+                }
+
+            //detect Shift + Enter for execution
+            if (shift && event.keyCode === 13) {
+                event.preventDefault();
+                var inputCode = document.getElementById('input').value;
+                insertHtml('right', inputCode)
+            }
+
+            //execution of the user written code and showing the result on the right side.
+            function insertHtml(id, input) {
+                var ele = document.getElementById(id);
+                var div = document.createElement('div');
+                div.innerHTML = input;
+                ele.innerHTML = "";
+                ele.appendChild(div);
+                var codes = div.getElementsByTagName("script");
+                for (var i = 0; i < codes.length; i++) {
+                    // execution of code
+                    try {
+                        eval(codes[i].text);
+                    } catch (error) {
+                        console.log('error');
+                    }
+                    
+                }
+            }
+
+        })
+    </script>
+</body>
+
+</html>
